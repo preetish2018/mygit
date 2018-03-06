@@ -16,7 +16,7 @@ Configuration file : .profile
 Run .profile in putty . ./.profile
 alias c='clear'
 --------------------------------------------------------------
-
+zxzcxcvxvcbcbvbvnbmnbmn,m,.,.ml,jnm,hjkhkjhkhkhkh
 Basic Unix commands
 
 date
