@@ -1,0 +1,240 @@
+DB Connection in sql developer:
+
+Basic connection via direct input of credentials, hostname, port number and service name
+TNS connection: via tnsnames.ora (configuration file), stored in C:/Oracle/...../Network/Admin
+
+DB Connection through Putty:
+sqlplus username@DBNAME/Pwd
+
+or 
+sqlplus username@DBNAME
+
+
+-------------------------------------------------------------
+Putty:
+Configuration file : .profile
+Run .profile in putty . ./.profile
+alias c='clear'
+--------------------------------------------------------------
+
+Basic Unix commands
+
+date
+cd
+mkdir
+ls (with options) e.g. ls -lrt; ls -ld;
+ll
+chmod
+cp filename dest_folder (copy file)
+mv filename dest_filename (rename file)
+rm filename
+rm -rf * (remove files+folder)
+find command (search file)  find [link options] [path] [criteria options] [operation]
+examples:
+find / -name filename (search file from root)
+find / -type f -name filename (search only file (exclude directories) from root)
+find . -type f | grep keyword ( search file with the specific keyword in current path)
+
+escape mode (e.g. esc+k = previos command executed)
+
+:wq! (save  and quit by force)
+:wq (save and quit)
+:q (without saving quit)
+:q! (without saving quit by force)
+
+echo ( display ~printf)
+mailx (send emails from unix)
+grep 
+
+cat,less,more (reading a file)
+cat filename | pg (page by page reading)
+cat filename | head -10 (first 10 lines)
+cat filename | tail -10 (last 10 lines)
+
+grep "pattern" filename
+grep "loaded" CDTJKITDEUD204121.log | wc -l
+
+sed,awk,sort
+
+ps -ef ( list of running processes)
+jobs (backend sripts running in the unix terminals)
+./todo.ksh (run script in unix terminal)
+nohup todo.ksh & (run script in backend)
+
+JOBS TO FIND HOW MANY SCRIPT RUNNING
+
+PS-Ef TOTAL  PROCESS RUNNING
+
+
+KILL -9 PROCESS ID
+
+
+touch filename (create a null file)
+
+concept of pipe (|) and rediction (>)
+
+cat file1.txt > file2.txt (file2 will have all the contents of file1)
+cat file3.txt >> file2.txt (file2 will have previous contents + contents of file3)
+-----------------------------------------------------------------------
+
+
+
+select * from dual;
+
+select to_char(sysdate,'dd-MON-yyyy HH24:MI:SS') from dual;
+
+dd.mon.yyyy
+
+select '02-sep-2017' date from dual;
+
+--create table temp_date as 
+select '02-sep-2017' dt from dual;
+
+drop table temp_date;
+
+create table temp_asaS
+(uname varchar(20),
+userid number(10)
+);
+
+create table temp_date as select * from temp_asaS;
+
+alter table temp_asaS add  dob date;
+
+update temp_date set DOB='26-Jan-1985' WHERE uname='Sadhana';
+
+create table temp_tma as 
+select * from irtmatbl where 1=2;
+
+select * from temp_asaS 
+--where (INITCAP(uname)='Santosh' OR INITCAP(uname)='Sadhana')
+where INITCAP(uname) LIKE ('Sadh%')--,
+OR INITCAP(uname) like 'Sant%'
+;
+
+
+select rowid,rownum,uname,userid,dob from temp_asaS order by userid desc;
+
+
+delete from temp_date;
+
+truncate table temp_date;
+
+drop table temp_date;
+
+desc irtmatbl;
+
+create table temp_date as
+select * from irtmatbl
+where tm_id  in (125017,293313,168470,187499,151283,151284)
+--AND hplmnid=27604
+;
+
+select tm_id,count(*) from temp_date 
+WHERE charge_type='AIR'
+AND usage_type='C'
+- - and valid_to>sysdate
+- - and to_char(valid_from,'YYYY') between '2011' and '2014'
+group by tm_id
+HAVING COUNT(*)>500
+order by 1 desc
+;
+
+INSERT INTO temp_date
+SELECT * FROM IRTMATBL WHERE TM_ID=293313;
+
+select VPLMNID,HPLMNID,TM_ID,CHARGE_TYPE,USAGE_TYPE,COUNT(*) CNT from temp_date 
+GROUP BY VPLMNID,HPLMNID,TM_ID,CHARGE_TYPE,USAGE_TYPE
+HAVING COUNT(*)>1
+;
+
+SELECT ROWID,TD.* FROM temp_date TD
+where EXISTS
+(
+select VPLMNID,HPLMNID,TM_ID,CHARGE_TYPE,USAGE_TYPE,COUNT(*) CNT from temp_date 
+GROUP BY VPLMNID,HPLMNID,TM_ID,CHARGE_TYPE,USAGE_TYPE
+HAVING COUNT(*)>1
+);
+
+AAAlAUAARAAOWQ1AAu
+AAAlAUAARAAOWQEAAA
+
+SELECT ROWID,rownum,TD.* FROM temp_date TD
+where EXISTS
+(
+select 1 from temp_date T
+WHERE TD.VPLMNID=T.VPLMNID
+AND TD.HPLMNID=T.HPLMNID
+AND TD.TM_ID=T.TM_ID
+AND TD.CHARGE_TYPE=T.CHARGE_TYPE
+AND TD.USAGE_TYPE=T.USAGE_TYPE
+GROUP BY VPLMNID,HPLMNID,TM_ID,CHARGE_TYPE,USAGE_TYPE
+HAVING COUNT(*)>1
+)
+;
+
+--remove duplicate---
+
+select * from temp_date td
+where rowid not in 
+(select min(rowid) from temp_date
+GROUP BY VPLMNID,HPLMNID,TM_ID,CHARGE_TYPE,USAGE_TYPE
+)
+;
+
+--Functions--
+
+SELECT SUBSTR('SANTOSH',4,3) FROM DUAL;
+
+SELECT INSTR('TSANTOSH','T') FROM DUAL;
+
+SELECT SUBSTR('CDJPNKIUSACG00012',3,5),SUBSTR('CDJPNKIUSACG00012',8,5) FROM DUAL;
+
+select trunc(sysdate) from dual;
+
+select trunc('1.232342354',5) from dual;
+
+select floor('1.532342354') from dual;
+
+Select ceil('1.032342354') from dual;
+
+select round('55.532346354',-2) from dual;
+
+select to_char(sysdate,'DY DDSPTH MONTH YYYY HH12:MI AM') from dual;
+
+select to_char('1223.89','$9,999.99') from dual;
+
+
+select tm_id,tariff_name from temp_date 
+where tariff_name  LIKE 'CODOR%'
+UNION
+select tm_id,tariff_name from temp_date 
+where tariff_name LIKE 'LBNLC%'
+;
+
+select * from temp_date 
+--where tariff_name  LIKE 'CODOR%'
+;
+
+select * from (select userid,uname from temp_asas order by userid desc) 
+where rownum<2;
+
+
+with q as (
+select 10 deptno, 'rrr' empname, 10000.00 sal from dual union all
+select 11, 'nnn', 20000.00 from dual union all
+select 11, 'mmm', 5000.00 from dual union all
+select 12, 'kkk', 30000 from dual union all
+select 12, 'zzz', 20000 from dual union all
+select 10, 'fff', 40000 from dual union all
+select 10, 'ddd', 40000 from dual union all
+select 10, 'bbb', 50000 from dual union all
+select 10, 'xxx', null from dual union all
+select 10, 'ccc', 50000 from dual)
+select * from 
+(select empname, deptno, sal,rank() over (partition by deptno order by sal nulls first) rank
+, dense_rank() over (partition by deptno order by sal nulls first) dr1
+     , dense_rank() over (partition by deptno order by sal ) dr2
+from q)
+where dr2<3
+;
